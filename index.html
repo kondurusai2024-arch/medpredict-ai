@@ -1,186 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Heart Disease Predictor</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #ffe5e5;
-            text-align: center;
-        }
-        .box {
-            background: white;
-            padding: 20px;
-            margin: 20px auto;
-            width: 80%;
-            border-radius: 10px;
-        }
-        input, select, button {
-            margin: 5px;
-            padding: 10px;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Risk Screening</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<h1>❤️ Heart Disease Prediction</h1>
+<div class="container">
 
-<div class="box">
+    <h1>💗 Health Risk Screening</h1>
+    <p class="subtitle">
+        Early screening can support better health decisions.
+    </p>
 
-<input type="number" id="age" placeholder="Age">
-<select id="sex">
-    <option value="">Select Sex</option>
-    <option value="1">Male</option>
-    <option value="0">Female</option>
-</select>
+    <!-- Disease Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('heart')">❤️ Heart Disease</button>
+        <button class="tab-btn" onclick="switchTab('thyroid')">🦋 Thyroid Disease</button>
+    </div>
 
-<select id="cp">
-    <option value="">Chest Pain</option>
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-</select>
+    <form action="/predict" method="POST">
 
-<input type="number" id="bp" placeholder="BP">
-<input type="number" id="chol" placeholder="Cholesterol">
+        <input type="hidden" name="disease_type" id="disease_type" value="heart">
 
-<select id="fbs">
-    <option value="">FBS</option>
-    <option value="0">No</option>
-    <option value="1">Yes</option>
-</select>
+        <!-- HEART FORM -->
+        <div id="heart-form" class="tab-content show">
+            <div class="grid">
+                <input type="number" name="age" placeholder="Age" required>
+                <select name="sex">
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
 
-<select id="restecg">
-    <option value="">Rest ECG</option>
-    <option value="0">Normal</option>
-    <option value="1">Abnormal</option>
-</select>
+                <input type="number" name="cp" placeholder="Chest Pain Type">
+                <input type="number" name="trestbps" placeholder="Blood Pressure">
+                <input type="number" name="chol" placeholder="Cholesterol">
+                <input type="number" name="fbs" placeholder="Fasting Blood Sugar">
+                <input type="number" name="restecg" placeholder="Rest ECG">
+                <input type="number" name="thalach" placeholder="Max Heart Rate">
+                <input type="number" name="exang" placeholder="Exercise Angina">
+                <input type="number" step="0.1" name="oldpeak" placeholder="Old Peak">
+                <input type="number" name="slope" placeholder="Slope">
+                <input type="number" name="ca" placeholder="CA">
+                <input type="number" name="thal" placeholder="Thal">
+            </div>
+        </div>
 
-<input type="number" id="thalach" placeholder="Heart Rate">
+        <!-- THYROID FORM -->
+        <div id="thyroid-form" class="tab-content">
+            <div class="grid">
+                <input type="number" name="t_age" placeholder="Age">
 
-<select id="exang">
-    <option value="">Exercise Angina</option>
-    <option value="0">No</option>
-    <option value="1">Yes</option>
-</select>
+                <select name="t_sex">
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
 
-<input type="number" id="oldpeak" placeholder="Oldpeak">
+                <input type="number" step="0.1" name="t_tsh" placeholder="TSH">
+                <input type="number" step="0.1" name="t_t3" placeholder="T3">
+                <input type="number" step="0.1" name="t_tt4" placeholder="TT4">
+                <input type="number" step="0.1" name="t_t4u" placeholder="T4U">
+                <input type="number" step="0.1" name="t_fti" placeholder="FTI">
+            </div>
+        </div>
 
-<select id="slope">
-    <option value="">Slope</option>
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-</select>
+        <!-- Buttons -->
+        <div class="button-row">
+            <button type="submit" class="predict-btn">📊 Predict Risk</button>
+            <button type="reset" class="reset-btn">🧼 Reset</button>
+        </div>
 
-<select id="ca">
-    <option value="">CA</option>
-    <option value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-</select>
+    </form>
 
-<select id="thal">
-    <option value="">Thal</option>
-    <option value="1">Normal</option>
-    <option value="2">Fixed</option>
-    <option value="3">Reversible</option>
-</select>
 
-<br><br>
+    <!-- RESULT SECTION -->
+    {% if prediction_text %}
+    <div class="result
+        {% if risk_level == 'Low' %}
+            low
+        {% elif risk_level == 'Moderate' %}
+            medium
+        {% else %}
+            high
+        {% endif %}
+    ">
 
-<button onclick="predict()">Predict</button>
-<button onclick="healthySample()">Healthy Sample</button>
-<button onclick="riskySample()">Risky Sample</button>
+        <div class="result-top">
+            <h2>
+                {% if disease_type == 'thyroid' %}
+                    🦋 {{ prediction_text }}
+                {% else %}
+                    ❤️ {{ prediction_text }}
+                {% endif %}
+            </h2>
+
+            {% if risk_level %}
+            <span class="badge">{{ risk_level }} Risk</span>
+            {% endif %}
+        </div>
+
+        {% if probability is not none %}
+        <p><strong>Estimated Risk Probability:</strong> {{ probability }}%</p>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ probability }}%;"></div>
+        </div>
+        {% endif %}
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>
+                    {% if disease_type == 'thyroid' %}
+                        🦋 Thyroid Tips
+                    {% else %}
+                        ❤️ Heart Tips
+                    {% endif %}
+                </h3>
+
+                <ul>
+                    {% for tip in tips %}
+                    <li>{{ tip }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🛡 Precautions</h3>
+
+                <ul>
+                    {% for p in precautions %}
+                    <li>{{ p }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="note">
+            <strong>Note:</strong> This is an educational machine-learning screening tool
+            and not a confirmed medical diagnosis.
+        </div>
+
+    </div>
+    {% endif %}
 
 </div>
 
-<div id="result"></div>
 
 <script>
 
-function getValue(id) {
-    let val = document.getElementById(id).value;
-    return val === "" ? 0 : parseFloat(val);
-}
+function switchTab(type){
 
-function predict() {
-    let age = getValue("age");
-    let bp = getValue("bp");
-    let chol = getValue("chol");
-    let hr = getValue("thalach");
-    let oldpeak = getValue("oldpeak");
+    document.getElementById("disease_type").value = type;
 
-    let score = 0;
+    const heartForm = document.getElementById("heart-form");
+    const thyroidForm = document.getElementById("thyroid-form");
 
-    if(age > 50) score += 20;
-    if(bp > 140) score += 20;
-    if(chol > 240) score += 20;
-    if(hr < 120) score += 20;
-    if(oldpeak > 2) score += 20;
+    const buttons = document.querySelectorAll(".tab-btn");
 
-    showResult(score);
-}
+    buttons.forEach(btn => btn.classList.remove("active"));
 
-function healthySample() {
-    document.getElementById("age").value = 30;
-    document.getElementById("bp").value = 110;
-    document.getElementById("chol").value = 180;
-    document.getElementById("thalach").value = 180;
-    document.getElementById("oldpeak").value = 0.1;
+    if(type==="heart"){
+        heartForm.classList.add("show");
+        thyroidForm.classList.remove("show");
 
-    showResult(15); // always LOW
-}
-
-function riskySample() {
-    document.getElementById("age").value = 65;
-    document.getElementById("bp").value = 160;
-    document.getElementById("chol").value = 300;
-    document.getElementById("thalach").value = 110;
-    document.getElementById("oldpeak").value = 3;
-
-    showResult(85); // always HIGH
-}
-
-function showResult(prob) {
-    let risk = "";
-    let tips = [];
-    let precautions = [];
-
-    if(prob < 35){
-        risk = "Low";
-        tips = ["Stay active", "Eat healthy", "Exercise daily"];
-        precautions = ["Avoid junk food", "Check BP regularly"];
-    }
-    else if(prob < 65){
-        risk = "Medium";
-        tips = ["Reduce oil food", "Exercise daily"];
-        precautions = ["Avoid stress", "Consult doctor"];
+        buttons[0].classList.add("active");
     }
     else{
-        risk = "High";
-        tips = ["Consult doctor", "Strict diet needed"];
-        precautions = ["Avoid smoking", "Take medicines regularly"];
+        thyroidForm.classList.add("show");
+        heartForm.classList.remove("show");
+
+        buttons[1].classList.add("active");
     }
-
-    document.getElementById("result").innerHTML = `
-        <div class="box result">
-            <h2>${risk} Risk</h2>
-            <p>Probability: ${prob}%</p>
-
-            <h3>Tips</h3>
-            <ul>${tips.map(t => `<li>${t}</li>`).join("")}</ul>
-
-            <h3>Precautions</h3>
-            <ul>${precautions.map(p => `<li>${p}</li>`).join("")}</ul>
-        </div>
-    `;
 }
 
 </script>
