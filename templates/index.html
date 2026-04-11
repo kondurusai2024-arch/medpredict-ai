@@ -1,1 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart & Thyroid Disease Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #ffe6eb, #ffd8c8);
+            min-height: 100vh;
+            padding: 18px;
+        }
+
+        .main-wrapper {
+            max-width: 1350px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: #fffaf9;
+            border-radius: 26px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .left-panel {
+            padding: 36px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #f7ccd5;
+            color: #e64980;
+            background: #fff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 22px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            line-height: 1.08;
+            margin: 0 0 18px;
+            color: #23293d;
+            font-weight: 800;
+        }
+
+        .hero-sub {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 320px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 3px solid #f8dce2;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 22px;
+        }
+
+        .mini-card {
+            background: white;
+            border: 2px solid #f3e3e8;
+            border-radius: 20px;
+            padding: 18px;
+        }
+
+        .mini-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: #fff1f5;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+
+        .mini-card h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            color: #23293d;
+        }
+
+        .mini-card p {
+            margin: 0;
+            color: #6b7280;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .right-panel {
+            padding: 28px;
+        }
+
+        .panel-title {
+            font-size: 34px;
+            font-weight: 800;
+            color: #23293d;
+            margin: 0;
+        }
+
+        .panel-sub {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .top-switch {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .switch-btn {
+            flex: 1;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 2px solid #f0d7df;
+            background: white;
+            font-weight: 700;
+            color: #444;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-size: 14px;
+        }
+
+        .switch-btn.active {
+            background: linear-gradient(135deg, #ff5f7f, #ff7f63);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 10px 24px rgba(255, 95, 127, 0.22);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 16px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-group.full {
+            grid-column: span 2;
+        }
+
+        .field-group label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #2f3448;
+            font-size: 13px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 14px;
+            border-radius: 14px;
+            border: 2px solid #e8e1e4;
+            background: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #ff6f82;
+            box-shadow: 0 0 0 4px rgba(255,111,130,0.12);
+        }
+
+        .button-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .action-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 13px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #ff4f7c, #ff7d61);
+            color: white;
+            box-shadow: 0 12px 24px rgba(255, 95, 127, 0.22);
+        }
+
+        .ghost-btn {
+            background: #fff;
+            border: 2px solid #f0d7df;
+            color: #5c6272;
+        }
+
+        .result-box {
+            margin-top: 22px;
+            background: #fff;
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.04);
+            border: 2px solid #f1e3e8;
+        }
+
+        .result-box.low { border-left: 6px solid #2ecc71; }
+        .result-box.moderate { border-left: 6px solid #f1c40f; }
+        .result-box.high { border-left: 6px solid #e74c3c; }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #23293d;
+            margin: 0;
+        }
+
+        .badge {
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .low-badge { background: #d8f3dc; color: #1b7f46; }
+        .moderate-badge { background: #fff3cd; color: #8a6d1d; }
+        .high-badge { background: #ffd6d6; color: #b42318; }
+
+        .probability {
+            margin-top: 12px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        .progress-wrap {
+            margin-top: 12px;
+            background: #f0f0f0;
+            height: 10px;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.4s ease;
+        }
+
+        .fill-low { background: linear-gradient(90deg, #2ecc71, #58d68d); }
+        .fill-moderate { background: linear-gradient(90deg, #f1c40f, #f39c12); }
+        .fill-high { background: linear-gradient(90deg, #ff5c5c, #ff7b7b); }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .info-panel {
+            border: 2px solid #f1e3e8;
+            border-radius: 18px;
+            padding: 16px;
+            background: #fffdfd;
+        }
+
+        .info-panel h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #23293d;
+            font-size: 16px;
+        }
+
+        .info-panel ul {
+            margin: 0;
+            padding-left: 18px;
+            color: #4b5563;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .note {
+            margin-top: 18px;
+            border: 2px dashed #eadde2;
+            border-radius: 16px;
+            padding: 14px 16px;
+            color: #6b7280;
+            background: #fff;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 38px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .left-panel, .right-panel {
+                padding: 20px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .feature-row,
+            .form-grid,
+            .result-grid,
+            .button-row {
+                grid-template-columns: 1fr;
+            }
+
+            .field-group.full {
+                grid-column: span 1;
+            }
+
+            .hero-image {
+                height: 230px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+{% set current_type = disease_type if disease_type else 'heart' %}
+{% set current_risk = (risk_level|lower) if risk_level else 'low' %}
+
+<div class="main-wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="card left-panel">
+        <div class="pill" id="heroPill">💗 Health Risk Screening</div>
+
+        <h1 class="hero-title" id="heroTitle">
+            Early screening can support better health decisions.
+        </h1>
+
+        <p class="hero-sub" id="heroSub">
+            Enter patient parameters to estimate the likelihood of heart or thyroid disease risk.
+        </p>
+
+        <img id="heroImage" class="hero-image"
+             src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1400&auto=format&fit=crop"
+             alt="Medical screening image">
+
+        <div class="feature-row">
+            <div class="mini-card">
+                <div class="mini-icon">🩺</div>
+                <h3>Clinical Inputs</h3>
+                <p>Uses patient values to estimate disease risk.</p>
+            </div>
+            <div class="mini-card">
+                <div class="mini-icon">📊</div>
+                <h3>Risk Result</h3>
+                <p>Shows low, moderate, or high disease risk.</p>
+            </div>
+            <div class="mini-card">
+                <div class="mini-icon">💡</div>
+                <h3>Health Advice</h3>
+                <p>Shows separate tips and precautions for each disease.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="card right-panel">
+        <h2 class="panel-title">Patient Details</h2>
+        <p class="panel-sub">Fill all fields carefully for a more meaningful screening result.</p>
+
+        <div class="top-switch">
+            <button type="button" id="heartSwitch" class="switch-btn active" onclick="setDisease('heart')">❤️ Heart Disease</button>
+            <button type="button" id="thyroidSwitch" class="switch-btn" onclick="setDisease('thyroid')">🦋 Thyroid Disease</button>
+        </div>
+
+        <form action="/predict" method="post" id="predictionForm">
+            <input type="hidden" name="disease_type" id="disease_type" value="{{ current_type }}">
+
+            <!-- HEART FORM -->
+            <div id="heartForm">
+                <div class="form-grid">
+                    <div class="field-group"><label>Age</label><input type="number" name="age" placeholder="e.g. 52"></div>
+                    <div class="field-group"><label>Sex</label>
+                        <select name="sex">
+                            <option value="">Select</option>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>Resting BP</label><input type="number" name="trestbps" placeholder="e.g. 125"></div>
+                    <div class="field-group"><label>Cholesterol</label><input type="number" name="chol" placeholder="e.g. 212"></div>
+                    <div class="field-group"><label>Fasting Blood Sugar > 120</label>
+                        <select name="fbs">
+                            <option value="">Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>Max Heart Rate</label><input type="number" name="thalach" placeholder="e.g. 168"></div>
+                    <div class="field-group"><label>Exercise Induced Angina</label>
+                        <select name="exang">
+                            <option value="">Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>Oldpeak</label><input type="number" step="any" name="oldpeak" placeholder="e.g. 1.0"></div>
+                    <div class="field-group"><label>Slope</label>
+                        <select name="slope">
+                            <option value="">Select</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>CA</label>
+                        <select name="ca">
+                            <option value="">Select</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>Chest Pain Type</label>
+                        <select name="cp">
+                            <option value="">Select</option>
+                            <option value="0">Typical Angina</option>
+                            <option value="1">Atypical Angina</option>
+                            <option value="2">Non-anginal Pain</option>
+                            <option value="3">Asymptomatic</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>Rest ECG</label>
+                        <select name="restecg">
+                            <option value="">Select</option>
+                            <option value="0">Normal</option>
+                            <option value="1">ST-T Abnormality</option>
+                            <option value="2">Left Ventricular Hypertrophy</option>
+                        </select>
+                    </div>
+                    <div class="field-group full"><label>Thal</label>
+                        <select name="thal">
+                            <option value="">Select</option>
+                            <option value="1">Normal</option>
+                            <option value="2">Fixed Defect</option>
+                            <option value="3">Reversible Defect</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THYROID FORM -->
+            <div id="thyroidForm" class="hidden">
+                <div class="form-grid">
+                    <div class="field-group"><label>Age</label><input type="number" name="t_age" placeholder="e.g. 30"></div>
+                    <div class="field-group"><label>Sex</label>
+                        <select name="t_sex">
+                            <option value="">Select</option>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>TSH</label><input type="number" step="any" name="t_tsh" placeholder="e.g. 2.5"></div>
+                    <div class="field-group"><label>T3</label><input type="number" step="any" name="t_t3" placeholder="e.g. 1.3"></div>
+                    <div class="field-group"><label>TT4</label><input type="number" step="any" name="t_tt4" placeholder="e.g. 110"></div>
+                    <div class="field-group"><label>T4U</label><input type="number" step="any" name="t_t4u" placeholder="e.g. 1.0"></div>
+                    <div class="field-group full"><label>FTI</label><input type="number" step="any" name="t_fti" placeholder="e.g. 120"></div>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button type="submit" class="action-btn primary-btn">🩺 Predict Risk</button>
+                <button type="button" class="action-btn ghost-btn" onclick="fillHealthySample()">🟢 Healthy Sample</button>
+                <button type="button" class="action-btn ghost-btn" onclick="fillRiskySample()">🔴 Risky Sample</button>
+                <button type="button" class="action-btn ghost-btn" onclick="resetForm()">🧼 Reset</button>
+            </div>
+        </form>
+
+        {% if prediction_text %}
+        <div class="result-box {{ current_risk }}">
+            <div class="result-header">
+                <h3 class="result-title">
+                    {% if current_type == 'thyroid' %}
+                        🦋 {{ prediction_text }}
+                    {% else %}
+                        ❤️ {{ prediction_text }}
+                    {% endif %}
+                </h3>
+
+                {% if risk_level %}
+                <div class="badge 
+                    {% if current_risk == 'low' %}low-badge
+                    {% elif current_risk == 'moderate' %}moderate-badge
+                    {% else %}high-badge{% endif %}">
+                    {{ risk_level }} Risk
+                </div>
+                {% endif %}
+            </div>
+
+            {% if probability is not none %}
+            <div class="probability">
+                Estimated Risk Probability: <strong>{{ probability }}%</strong>
+            </div>
+
+            <div class="progress-wrap">
+                <div class="progress-fill 
+                    {% if current_risk == 'low' %}fill-low{% elif current_risk == 'moderate' %}fill-moderate{% else %}fill-high{% endif %}"
+                    style="width: {{ probability }}%;">
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="result-grid">
+                <div class="info-panel">
+                    <h3>{% if current_type == 'thyroid' %}🦋 Thyroid Tips{% else %}❤️ Heart Tips{% endif %}</h3>
+                    <ul>
+                        {% for tip in tips %}
+                        <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="info-panel">
+                    <h3>🛡 Precautions</h3>
+                    <ul>
+                        {% for p in precautions %}
+                        <li>{{ p }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note">
+                <strong>Note:</strong> This is an educational machine-learning screening tool and not a confirmed medical diagnosis.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function setDisease(type) {
+        document.getElementById("disease_type").value = type;
+
+        const heartForm = document.getElementById("heartForm");
+        const thyroidForm = document.getElementById("thyroidForm");
+        const heartBtn = document.getElementById("heartSwitch");
+        const thyroidBtn = document.getElementById("thyroidSwitch");
+
+        if (type === "heart") {
+            heartForm.classList.remove("hidden");
+            thyroidForm.classList.add("hidden");
+            heartBtn.classList.add("active");
+            thyroidBtn.classList.remove("active");
+        } else {
+            thyroidForm.classList.remove("hidden");
+            heartForm.classList.add("hidden");
+            thyroidBtn.classList.add("active");
+            heartBtn.classList.remove("active");
+        }
+    }
+
+    function fillHealthySample() {
+        const type = document.getElementById("disease_type").value;
+
+        if (type === "heart") {
+            document.querySelector('[name="age"]').value = 42;
+            document.querySelector('[name="sex"]').value = 1;
+            document.querySelector('[name="cp"]').value = 2;
+            document.querySelector('[name="trestbps"]').value = 118;
+            document.querySelector('[name="chol"]').value = 185;
+            document.querySelector('[name="fbs"]').value = 0;
+            document.querySelector('[name="restecg"]').value = 1;
+            document.querySelector('[name="thalach"]').value = 172;
+            document.querySelector('[name="exang"]').value = 0;
+            document.querySelector('[name="oldpeak"]').value = 0.2;
+            document.querySelector('[name="slope"]').value = 2;
+            document.querySelector('[name="ca"]').value = 0;
+            document.querySelector('[name="thal"]').value = 1;
+        } else {
+            document.querySelector('[name="t_age"]').value = 30;
+            document.querySelector('[name="t_sex"]').value = 0;
+            document.querySelector('[name="t_tsh"]').value = 2.5;
+            document.querySelector('[name="t_t3"]').value = 1.3;
+            document.querySelector('[name="t_tt4"]').value = 110;
+            document.querySelector('[name="t_t4u"]').value = 1.0;
+            document.querySelector('[name="t_fti"]').value = 120;
+        }
+    }
+
+    function fillRiskySample() {
+        const type = document.getElementById("disease_type").value;
+
+        if (type === "heart") {
+            document.querySelector('[name="age"]').value = 63;
+            document.querySelector('[name="sex"]').value = 1;
+            document.querySelector('[name="cp"]').value = 0;
+            document.querySelector('[name="trestbps"]').value = 150;
+            document.querySelector('[name="chol"]').value = 300;
+            document.querySelector('[name="fbs"]').value = 1;
+            document.querySelector('[name="restecg"]').value = 2;
+            document.querySelector('[name="thalach"]').value = 120;
+            document.querySelector('[name="exang"]').value = 1;
+            document.querySelector('[name="oldpeak"]').value = 3.0;
+            document.querySelector('[name="slope"]').value = 0;
+            document.querySelector('[name="ca"]').value = 2;
+            document.querySelector('[name="thal"]').value = 3;
+        } else {
+            document.querySelector('[name="t_age"]').value = 48;
+            document.querySelector('[name="t_sex"]').value = 0;
+            document.querySelector('[name="t_tsh"]').value = 8.2;
+            document.querySelector('[name="t_t3"]').value = 0.7;
+            document.querySelector('[name="t_tt4"]').value = 68;
+            document.querySelector('[name="t_t4u"]').value = 0.6;
+            document.querySelector('[name="t_fti"]').value = 82;
+        }
+    }
+
+    function resetForm() {
+        document.getElementById("predictionForm").reset();
+        setDisease(document.getElementById("disease_type").value || "heart");
+    }
+
+    window.onload = function () {
+        setDisease("{{ current_type }}");
+    };
+</script>
+
+</body>
+</html>
 
